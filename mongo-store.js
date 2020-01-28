@@ -93,7 +93,6 @@ module.exports = function (opts) {
   var seneca = this
   var desc
 
-  var dbConnection = null
   var dbinst = null
   var collmap = {}
 
@@ -116,16 +115,14 @@ module.exports = function (opts) {
     }
 
     // Connect using the URI
-    MongoClient.connect(conf.uri, {useNewUrlParser: true}, function (err, connection) {
+    MongoClient.connect(conf.uri, function (err, db) {
       if (err) {
         err.message = [err.message, 'mongo-store conf: ' + Util.inspect(conf)].join('. ')
         return seneca.die(err)
       }
 
-      // Set the instance and the database to use throughout the plugin.
-      // The database will be extracted from the provided URI.
-      dbConnection = connection
-      dbinst = connection.db()
+      // Set the instance to use throughout the plugin
+      dbinst = db
       seneca.log.debug({kind: 'entity', store: 'mongo-store', case: 'init', msg: 'db open', conf})
       cb(null)
     })
@@ -155,8 +152,8 @@ module.exports = function (opts) {
     name: name,
 
     close: function (args, cb) {
-      if (dbConnection) {
-        dbConnection.close(cb)
+      if (dbinst) {
+        dbinst.close(cb)
       }
       else return cb()
     },
