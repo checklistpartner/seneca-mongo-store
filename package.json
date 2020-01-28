@@ -41,7 +41,7 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "4.15.0",
-    "mongodb": "^2.2.31"
+    "mongodb": "3.1.6"
   },
   "devDependencies": {
     "async": "2.0.x",
@@ -55,8 +55,8 @@
     "lodash": "^4.15.0",
     "pre-commit": "1.1.x",
     "q": "^1.5.0",
-    "seneca": "plugin",
-    "seneca-entity": "1.3.x",
+    "seneca": "3.3.0",
+    "seneca-entity": "git://@github.com/RamonDonnell/seneca-entity.git#2e9755885ea9d88066321ede76815b76484393c7",
     "seneca-store-test": "0.3.0"
   },
   "files": [
