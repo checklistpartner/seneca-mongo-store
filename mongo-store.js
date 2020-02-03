@@ -263,24 +263,17 @@ module.exports = function (opts) {
 
           coll.find(qq, mq, function (err, cur) {
             if (!error(args, err, cb)) {
-              var list = []
+              const resultsList = []
 
-              cur.each(function (err, entp) {
+              cur.forEach(function (entity) {
+                entity.id = idstr(entity._id)
+                delete entity._id
+                const foundEntity = qent.make$(entity)
+                resultsList.push(foundEntity)
+              }, function (err) {
                 if (!error(args, err, cb)) {
-                  if (entp) {
-                    var fent = null
-                    if (entp) {
-                      entp.id = idstr(entp._id)
-                      delete entp._id
-
-                      fent = qent.make$(entp)
-                    }
-                    list.push(fent)
-                  }
-                  else {
-                    seneca.log.debug({kind: 'entity', store: 'mongo-store', case: 'list', q, length: list.length, entity: list[0], desc})
-                    cb(null, list)
-                  }
+                  seneca.log.debug({kind: 'entity', store: 'mongo-store', case: 'list', q, length: resultsList.length, entity: resultsList[0], desc})
+                  cb(null, resultsList)
                 }
               })
             }
