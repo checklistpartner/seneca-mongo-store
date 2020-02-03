@@ -74,12 +74,12 @@ function extratest (si, done) {
 
             coll.find({}, {}, function (err, cursor) {
               Assert.ok(null == err)
-
-              cursor.each(function (entry) {
-                if (!entry) {
-                  cb()
-                }
-              })
+              cursor.forEach(() => {}, () => cb())
+              // cursor.each(function (entry) {
+              //   if (!entry) {
+              //     cb()
+              //   }
+              // })
             })
           })
         })
