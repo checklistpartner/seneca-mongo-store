@@ -203,12 +203,22 @@ module.exports = function (opts) {
             delete entp.id
             !_.isEmpty(entp) && (u.$set = entp)
 
-            coll.update(q, u, o, function (err, update) {
-              if (!error(args, err, cb)) {
-                seneca.log.debug({kind: 'entity', store: 'mongo-store', case: 'save/update', entity: ent, desc})
-                cb(null, ent)
-              }
-            })
+            if (o.multi) {
+              coll.updateMany(q, u, o, function (err, update) {
+                if (!error(args, err, cb)) {
+                  seneca.log.debug({kind: 'entity', store: 'mongo-store', case: 'save/update', entity: ent, desc})
+                  cb(null, ent)
+                }
+              })
+            }
+            else {
+              coll.updateOne(q, u, o, function (err, update) {
+                if (!error(args, err, cb)) {
+                  seneca.log.debug({kind: 'entity', store: 'mongo-store', case: 'save/update', entity: ent, desc})
+                  cb(null, ent)
+                }
+              })
+            }
           }
           else {
             coll.insertOne(entp, function (err, inserts) {
